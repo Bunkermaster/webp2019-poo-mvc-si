@@ -1,0 +1,19 @@
+{
+    "name": "yann/demo-poo-si",
+    "authors": [
+        {
+            "name": "bunkermaster",
+            "email": "yann.le-scouarnec@hetic.net"
+        }
+    ],
+    "require": {
+        "twig/twig": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Controller\\": "Controller/",
+            "Model\\": "Model/",
+            "Helper\\": "Helper/"
+        }
+    }
+}

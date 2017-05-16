@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <a href="index.php?a=ajouter">+ Pokemon</a>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>nom</th>
+        </tr>
+        {% for pokemon in list %}
+        <tr>
+            <td><a href="index.php?a=details&id={{ pokemon.id }}">{{ pokemon.id }}</a></td>
+            <td>{{ pokemon.nom }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
