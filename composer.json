@@ -7,7 +7,10 @@
         }
     ],
     "require": {
-        "twig/twig": "^2.3"
+        "twig/twig": "^2.3",
+        "symfony/routing": "^3.2",
+        "symfony/yaml": "^3.2",
+        "symfony/config": "^3.2"
     },
     "autoload": {
         "psr-4": {

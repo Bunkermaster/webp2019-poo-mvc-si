@@ -3,6 +3,10 @@
 namespace Controller;
 
 use Helper\Database;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * Class FrontController
@@ -17,29 +21,30 @@ class FrontController
      */
     public function __construct()
     {
-        // je me connecte
-        $db = Database::get();
-        // gestion de l'action appelée, GEST en prio, puis POST puis chaine vide
-        $a = $_GET['a'] ?? $_POST['a'] ?? '';
-        switch($a){
-            case "details":
-                // GET /?a=details&id={id}
-                $controller = new PokemonController();
-                echo $controller->detailsAction();
-                break;
-
-            case "admin/supprimemoi":
-                // GET /?a=details&id={id}
-                $controller = new PokemonController();
-                echo $controller->supprimeMoiAction();
-                break;
-
-            case "list":
-            default:
-                // GET / ou GET /?a=list
-                $controller = new PokemonController();
-                echo $controller->listAction();
-                break;
+        // router
+        $locator = new FileLocator(array(__DIR__));
+        $loader = new YamlFileLoader($locator);
+        $collection = $loader->load(dirname(__DIR__).'/Config/routes.yml');
+        $context = new RequestContext(
+            $_SERVER['REQUEST_URI'],
+            $_SERVER['REQUEST_METHOD'],
+            $_SERVER['HTTP_HOST']
+        );
+        $matcher = new UrlMatcher($collection, $context);
+        $parameters = $matcher->match($_SERVER['REQUEST_URI']);
+        // recuperation de la classe et de la methode
+        list($routeController, $routeMethod) = explode('::', $parameters['_controller']);
+        // test sur la classe
+        if (!class_exists($routeController)) {
+            throw new \BadFunctionCallException('Router :: Controller inexistant');
         }
+        $controller = new $routeController();
+        // test sur la methode
+        if (!method_exists($controller, $routeMethod)) {
+            throw new \BadFunctionCallException('Router :: Methode inexistante');
+        }
+        // instanciation du controller
+        $output = $controller->$routeMethod();
+        echo $output;
     }
 }

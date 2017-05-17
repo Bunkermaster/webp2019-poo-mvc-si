@@ -1,0 +1,13 @@
+# routes.yml
+homepage:
+    path:     /
+    defaults: { _controller: 'Controller\PokemonController::listAction' }
+
+demostatic:
+    path:     /admin/supprimemoi
+    defaults: { _controller: 'Controller\PokemonController::supprimeMoiAction' }
+
+pokemondetails:
+    path:     /details
+    defaults: { _controller: 'Controller\PokemonController::detailsAction' }
+
